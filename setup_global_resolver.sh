@@ -11,7 +11,7 @@ AKKA_RESOLVER_URL='https://repo.akka.io/maven/github_actions'
 AKKA_SNAPSHOT_RESOLVER_URL='https://repo.akka.io/maven/snapshots/github_actions'
 SBT_RESOLVER_LINE="resolvers += \"Akka library repository\" at \"$AKKA_RESOLVER_URL\"
 resolvers += \"Akka snapshot repository\" at \"$AKKA_SNAPSHOT_RESOLVER_URL\"
-resolvers ++= Resolvers.local"
+resolvers += Resolver.mavenLocal"
 
 SBT_PLUGIN_PROJECT_NAME="${1:-}"
 # Uses GITHUB_WORKSPACE (set by the runner) or defaults to the current directory if run locally
