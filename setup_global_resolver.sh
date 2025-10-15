@@ -10,9 +10,7 @@ set -euo pipefail
 AKKA_RESOLVER_URL='https://repo.akka.io/maven/github_actions'
 AKKA_SNAPSHOT_RESOLVER_URL='https://repo.akka.io/maven/snapshots/github_actions'
 SBT_RESOLVER_LINE="resolvers += \"Akka library repository\" at \"$AKKA_RESOLVER_URL\"
-resolvers += \"Akka snapshot repository\" at \"$AKKA_SNAPSHOT_RESOLVER_URL\"
-resolvers += Resolver.mavenLocal
-resolvers += Resolver.defaultLocal"
+resolvers += \"Akka snapshot repository\" at \"$AKKA_SNAPSHOT_RESOLVER_URL\""
 
 SBT_PLUGIN_PROJECT_NAME="${1:-}"
 # Uses GITHUB_WORKSPACE (set by the runner) or defaults to the current directory if run locally
@@ -90,6 +88,7 @@ setup_maven() {
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
                       https://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <localRepository>${user.home}/.m2/repository</localRepository>
   <mirrors>
     <mirror>
       <id>akka-repo-redirect</id>
@@ -120,6 +119,7 @@ setup_maven() {
           <url>$AKKA_SNAPSHOT_RESOLVER_URL</url>
         </repository>
       </repositories>
+      
 
       <pluginRepositories>
         <pluginRepository>
