@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# .github/script.sh: Adds the Akka repository globally for sbt and Maven.
+# .github/script.sh: Adds the Akka repository globally for sbt and Maven,
+# and conditionally injects deployment credentials for Sonatype Maven Central
 
 # Fail on any error, reference undefined variables, and prevent pipeline failures
 set -euo pipefail
@@ -56,7 +57,32 @@ setup_maven() {
     echo -e "\n--- Setting up Akka resolver for Maven global configuration (~/.m2/settings.xml)"
     mkdir -p ~/.m2
 
-    # Create the settings.xml file with the Akka repository configuration
+    # 1. Define credential variables from environment variables (standard CI practice)
+    # Use a default empty string for variables not explicitly set to satisfy 'set -u'.
+    SONATYPE_USERNAME="${SONATYPE_USERNAME:-}"
+    SONATYPE_PASSWORD="${SONATYPE_PASSWORD:-}"
+    PGP_PASSPHRASE="${PGP_PASSPHRASE:-}"
+    PUBLISH_SERVERS_XML=""
+    GPG_PROPERTIES_XML=""
+    if [[ -n "$SONATYPE_USERNAME" && -n "$SONATYPE_PASSWORD" && -n "$PGP_PASSPHRASE" ]]; then
+        echo "🔑 Publishing credentials found. Injecting servers and GPG passphrase into settings.xml."
+        PUBLISH_SERVERS_XML="
+  <servers>
+    <server>
+      <id>central</id>
+      <username>${SONATYPE_USERNAME}</username>
+      <password>${SONATYPE_PASSWORD}</password>
+    </server>
+  </servers>"
+        GPG_PROPERTIES_XML="
+      <properties>
+        <gpg.passphrase>${PGP_PASSPHRASE}</gpg.passphrase>
+      </properties>"
+    else
+        echo "⚠️ Publishing credentials (SONATYPE_USERNAME, SONATYPE_PASSWORD, PGP_PASSPHRASE) not set. Skipping publishing configuration."
+    fi
+
+    # 2. Generate the full settings.xml file, substituting the dynamic blocks
     cat > ~/.m2/settings.xml <<EOF
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -76,6 +102,8 @@ setup_maven() {
       <id>maven-default-http-blocker</id>
     </mirror>
   </mirrors>
+  
+  ${PUBLISH_SERVERS_XML}
 
   <profiles>
     <profile>
@@ -101,6 +129,8 @@ setup_maven() {
           <url>$AKKA_SNAPSHOT_RESOLVER_URL</url>
         </pluginRepository>
       </pluginRepositories>
+
+      ${GPG_PROPERTIES_XML}      
     </profile>
   </profiles>
 
@@ -109,7 +139,7 @@ setup_maven() {
   </activeProfiles>
 </settings>
 EOF
-    echo "✅ Created/Overwrote ~/.m2/settings.xml with Akka repository configuration."
+    echo "✅ Created/Overwrote ~/.m2/settings.xml with Akka repository and optional publishing configuration."
 }
 
 # --- Main Execution ---
