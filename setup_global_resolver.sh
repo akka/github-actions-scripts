@@ -149,7 +149,7 @@ EOF
 
 # --- Main Execution ---
 main() {
-    setup_sbt
+    # setup_sbt
     # Only run scripted test setup if the sbt plugin project name (passed as $1) is non-empty.
     if [ -n "$SBT_PLUGIN_PROJECT_NAME" ]; then
         echo "Using SBT plugin project name: $SBT_PLUGIN_PROJECT_NAME to locate scripted tests."
