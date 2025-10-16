@@ -157,7 +157,7 @@ main() {
     else
         echo "⚠️ SBT plugin project name (argument \$1) is empty. Skipping scripted test setup."
     fi
-    setup_maven
+    # setup_maven
     echo -e "\n🎉 Akka resolvers setup complete."
 }
 
