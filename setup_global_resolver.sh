@@ -130,7 +130,7 @@ setup_maven() {
           <url>$AKKA_SNAPSHOT_RESOLVER_URL</url>
           <snapshots>
             <enabled>true</enabled>
-            <updatePolicy>**never**</updatePolicy> 
+            <updatePolicy>never</updatePolicy> 
           </snapshots>
         </pluginRepository>
       </pluginRepositories>
