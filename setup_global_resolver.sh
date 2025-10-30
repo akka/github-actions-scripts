@@ -45,6 +45,11 @@ DEFAULT_MIRRORS_XML="
       <blocked>true</blocked>
       <id>maven-default-http-blocker</id>
     </mirror>
+    <mirror>
+      <id>central</id>
+      <mirrorOf>central</mirrorOf>
+      <url>https://repo.maven.apache.org/maven2/</url>
+    </mirror>
   </mirrors>"
 
 # ----------------------------------------
