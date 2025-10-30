@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# .github/script.sh: Adds the Akka repository globally for sbt and Maven,
+# .github/script.sh: Adds the Akka repository globally for sbt, Maven, and Gradle,
 # and conditionally injects deployment credentials for Sonatype Maven Central
 
 # Fail on any error, reference undefined variables, and prevent pipeline failures
@@ -90,25 +90,47 @@ setup_scripted_tests() {
 
 ---
 
-## Setup for Gradle ⚙️
+## Setup for Gradle (Init Script) ⚙️
 setup_gradle() {
-    echo -e "\n--- Setting up Akka resolver for Gradle global configuration (~/.gradle/gradle.properties)"
-    mkdir -p ~/.gradle
+    echo -e "\n--- Setting up Akka resolver for Gradle via Init Script (~/.gradle/init.d/akka-resolvers.init.gradle)"
+    GRADLE_INIT_DIR=~/.gradle/init.d
+    mkdir -p "$GRADLE_INIT_DIR"
+    INIT_SCRIPT_FILE="$GRADLE_INIT_DIR/akka-resolvers.init.gradle"
 
-    # Define properties that can be used in a Gradle build file to configure the repository
-    GRADLE_PROPERTIES="
-# Akka Resolver properties injected by GitHub Actions script
-akka.resolver.releases.url=${AKKA_RESOLVER_URL}
-akka.resolver.snapshots.url=${AKKA_SNAPSHOT_RESOLVER_URL}
-"
-
-    # Append to the file if it exists, otherwise create it
-    echo "$GRADLE_PROPERTIES" >> ~/.gradle/gradle.properties
+    # Define the Groovy Init Script content. The repositories block is injected 
+    # for all projects, ensuring global availability.
+    cat > "$INIT_SCRIPT_FILE" <<EOF
+allprojects {
+    buildscript {
+        repositories {
+            mavenLocal()
+            mavenCentral()
+            maven {
+                name = 'AkkaReleases'
+                url = '$AKKA_RESOLVER_URL'
+            }
+            maven {
+                name = 'AkkaSnapshots'
+                url = '$AKKA_SNAPSHOT_RESOLVER_URL'
+            }
+        }
+    }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven {
+            name = 'AkkaReleases'
+            url = '$AKKA_RESOLVER_URL'
+        }
+        maven {
+            name = 'AkkaSnapshots'
+            url = '$AKKA_SNAPSHOT_RESOLVER_URL'
+        }
+    }
+}
+EOF
     
-    echo "✅ Added Akka resolver URLs as properties to ~/.gradle/gradle.properties"
-    
-    echo "Note: To use these, a Gradle build file must define the repositories:"
-    echo "repositories { maven { url = uri(providers.systemProperty('akka.resolver.releases.url')) } }"
+    echo "✅ Created Gradle Init Script at $INIT_SCRIPT_FILE to inject repositories globally."
 }
 
 ---
