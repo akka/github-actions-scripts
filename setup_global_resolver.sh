@@ -57,7 +57,6 @@ setup_sbt() {
     echo "✅ Added resolver to ~/.sbt/1.0/resolvers.sbt"
 }
 
----
 
 ## Setup for Scripted Tests
 setup_scripted_tests() {
@@ -88,7 +87,6 @@ setup_scripted_tests() {
     echo "✅ Finished setting up resolvers for sbt scripted tests."
 }
 
----
 
 ## Setup for Gradle (Init Script) ⚙️
 setup_gradle() {
@@ -133,7 +131,6 @@ EOF
     echo "✅ Created Gradle Init Script at $INIT_SCRIPT_FILE to inject repositories globally."
 }
 
----
 
 ## Setup for Maven
 setup_maven() {
@@ -225,7 +222,6 @@ EOF
     echo "✅ Created/Overwrote ~/.m2/settings.xml with Akka repository and optional publishing configuration."
 }
 
----
 
 ## Main Execution
 main() {
