@@ -156,4 +156,40 @@ setup_maven() {
         </pluginRepository>
         <pluginRepository>
           <id>akka-snapshots-plugin-repository</id>
-          <url>$AKKA_SNAPSHOT_RESOLVER
+          <url>$AKKA_SNAPSHOT_RESOLVER_URL</url>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy> 
+          </snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+
+      ${GPG_PROPERTIES_XML}      
+    </profile>
+  </profiles>
+
+  <activeProfiles>
+    <activeProfile>akka-repo</activeProfile>
+  </activeProfiles>
+</settings>
+EOF
+    echo "✅ Created/Overwrote ~/.m2/settings.xml with Akka repository and optional publishing configuration."
+}
+
+# --- Main Execution ---
+main() {
+    setup_sbt
+    
+    # Check if the project name is set to run scripted tests
+    if [ -n "$SBT_PLUGIN_PROJECT_NAME" ]; then
+        echo "Using SBT plugin project name: $SBT_PLUGIN_PROJECT_NAME to locate scripted tests."
+        setup_scripted_tests
+    else
+        echo "⚠️ SBT plugin project name (argument \$1) is empty. Skipping scripted test setup."
+    fi
+    
+    setup_maven
+    echo -e "\n🎉 Akka resolvers setup complete."
+}
+
+main
