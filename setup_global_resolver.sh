@@ -57,6 +57,8 @@ setup_sbt() {
     echo "✅ Added resolver to ~/.sbt/1.0/resolvers.sbt"
 }
 
+---
+
 ## Setup for Scripted Tests
 setup_scripted_tests() {
     echo -e "\n--- Setting up Akka resolver for sbt scripted tests (globally per test case)"
@@ -85,6 +87,31 @@ setup_scripted_tests() {
     done
     echo "✅ Finished setting up resolvers for sbt scripted tests."
 }
+
+---
+
+## Setup for Gradle ⚙️
+setup_gradle() {
+    echo -e "\n--- Setting up Akka resolver for Gradle global configuration (~/.gradle/gradle.properties)"
+    mkdir -p ~/.gradle
+
+    # Define properties that can be used in a Gradle build file to configure the repository
+    GRADLE_PROPERTIES="
+# Akka Resolver properties injected by GitHub Actions script
+akka.resolver.releases.url=${AKKA_RESOLVER_URL}
+akka.resolver.snapshots.url=${AKKA_SNAPSHOT_RESOLVER_URL}
+"
+
+    # Append to the file if it exists, otherwise create it
+    echo "$GRADLE_PROPERTIES" >> ~/.gradle/gradle.properties
+    
+    echo "✅ Added Akka resolver URLs as properties to ~/.gradle/gradle.properties"
+    
+    echo "Note: To use these, a Gradle build file must define the repositories:"
+    echo "repositories { maven { url = uri(providers.systemProperty('akka.resolver.releases.url')) } }"
+}
+
+---
 
 ## Setup for Maven
 setup_maven() {
@@ -176,7 +203,9 @@ EOF
     echo "✅ Created/Overwrote ~/.m2/settings.xml with Akka repository and optional publishing configuration."
 }
 
-# --- Main Execution ---
+---
+
+## Main Execution
 main() {
     setup_sbt
     
@@ -189,6 +218,7 @@ main() {
     fi
     
     setup_maven
+    setup_gradle
     echo -e "\n🎉 Akka resolvers setup complete."
 }
 
