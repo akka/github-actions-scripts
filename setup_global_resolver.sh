@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# .github/script.sh: Adds the Akka repository globally for sbt and Maven,
+# .github/script.sh: Adds the Akka repository globally for sbt, Maven, and Gradle,
 # and conditionally injects deployment credentials for Sonatype Maven Central
 
 # Fail on any error, reference undefined variables, and prevent pipeline failures
@@ -57,6 +57,8 @@ setup_sbt() {
     echo "✅ Added resolver to ~/.sbt/1.0/resolvers.sbt"
 }
 
+---
+
 ## Setup for Scripted Tests
 setup_scripted_tests() {
     echo -e "\n--- Setting up Akka resolver for sbt scripted tests (globally per test case)"
@@ -85,6 +87,53 @@ setup_scripted_tests() {
     done
     echo "✅ Finished setting up resolvers for sbt scripted tests."
 }
+
+---
+
+## Setup for Gradle (Init Script) ⚙️
+setup_gradle() {
+    echo -e "\n--- Setting up Akka resolver for Gradle via Init Script (~/.gradle/init.d/akka-resolvers.init.gradle)"
+    GRADLE_INIT_DIR=~/.gradle/init.d
+    mkdir -p "$GRADLE_INIT_DIR"
+    INIT_SCRIPT_FILE="$GRADLE_INIT_DIR/akka-resolvers.init.gradle"
+
+    # Define the Groovy Init Script content. The repositories block is injected 
+    # for all projects, ensuring global availability.
+    cat > "$INIT_SCRIPT_FILE" <<EOF
+allprojects {
+    buildscript {
+        repositories {
+            mavenLocal()
+            mavenCentral()
+            maven {
+                name = 'AkkaReleases'
+                url = '$AKKA_RESOLVER_URL'
+            }
+            maven {
+                name = 'AkkaSnapshots'
+                url = '$AKKA_SNAPSHOT_RESOLVER_URL'
+            }
+        }
+    }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven {
+            name = 'AkkaReleases'
+            url = '$AKKA_RESOLVER_URL'
+        }
+        maven {
+            name = 'AkkaSnapshots'
+            url = '$AKKA_SNAPSHOT_RESOLVER_URL'
+        }
+    }
+}
+EOF
+    
+    echo "✅ Created Gradle Init Script at $INIT_SCRIPT_FILE to inject repositories globally."
+}
+
+---
 
 ## Setup for Maven
 setup_maven() {
@@ -176,7 +225,9 @@ EOF
     echo "✅ Created/Overwrote ~/.m2/settings.xml with Akka repository and optional publishing configuration."
 }
 
-# --- Main Execution ---
+---
+
+## Main Execution
 main() {
     setup_sbt
     
@@ -189,6 +240,7 @@ main() {
     fi
     
     setup_maven
+    setup_gradle
     echo -e "\n🎉 Akka resolvers setup complete."
 }
 
