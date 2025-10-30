@@ -117,6 +117,10 @@ setup_maven() {
           <id>akka-snapshots-repository</id>
           <url>$AKKA_SNAPSHOT_RESOLVER_URL</url>
         </repository>
+        <repository>
+          <id>maven-central</id>
+          <url>https://repo1.maven.org/maven2/</url>
+        </repository>
       </repositories>
       
 
