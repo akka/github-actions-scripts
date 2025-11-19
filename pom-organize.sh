@@ -8,9 +8,11 @@ set -euo pipefail
 
 # --- Detect OS and set the correct sed flag ---
 SED_EXTENDED_REGEX_FLAG="-E" # Default to macOS/BSD
+SED_INPLACE="-i ''"
 if [[ "$(uname -s)" == "Linux" ]]; then
     # Change to -r if running on Linux (GNU sed)
     SED_EXTENDED_REGEX_FLAG="-r"
+    SED_INPLACE='-i'
 fi
 
 # Find the files and read each file path into the 'file_path' variable.
@@ -34,6 +36,9 @@ find "$SEARCH_DIR" -type f -name "*.pom" | while IFS= read -r file_path; do
 
     mkdir -p "$DEST_DIR"
     cp "$file_path" "$DEST_FILE"
+
+    # Remove repositories section
+    sed "${SED_INPLACE}" '' '/<repositories>/,/<\/repositories>/d' "${DEST_FILE}
 
     echo "$file_path -> $DEST_FILE"
 done
