@@ -38,7 +38,7 @@ find "$SEARCH_DIR" -type f -name "*.pom" | while IFS= read -r file_path; do
     cp "$file_path" "$DEST_FILE"
 
     # Remove repositories section
-    sed "${SED_INPLACE}" '' '/<repositories>/,/<\/repositories>/d' "${DEST_FILE}
+    sed "${SED_INPLACE}" '/<repositories>/,/<\/repositories>/d' "${DEST_FILE}"
 
     echo "$file_path -> $DEST_FILE"
 done
