@@ -1,5 +1,5 @@
 #!/bin/bash
-#
+# ensure the build didn't change any git controlled files
 set -euo pipefail
 
 if git diff --exit-code --quiet; then
