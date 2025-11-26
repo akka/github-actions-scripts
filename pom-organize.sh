@@ -2,7 +2,9 @@
 # organise sbt generated pom.xml files to be committed to repos for analysis tools
 
 SEARCH_DIR="."
-VERSION_REGEX='_2\.13-[0-9]+\.[0-9]+\.[0-9]+(_[0-9]+)?(-[A-Za-z0-9]+)?\.pom$'
+# sbt-kalix-1.4.1-54-5206e862-dev.pom
+# kalix-codegen-java_2.12-1.4.1-54-5206e862-dev.pom
+VERSION_REGEX='(_2\.1[23]+)?-[0-9]+\.[0-9]+\.[0-9]+(_[0-9]+)?(-[A-Za-z0-9-]+)?\.pom$'
 
 set -euo pipefail
 
