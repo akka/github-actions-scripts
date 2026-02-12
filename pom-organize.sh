@@ -18,11 +18,10 @@ if [[ "$(uname -s)" == "Linux" ]]; then
     SED_INPLACE=('-i')
 fi
 
-# insert a the git hash as version for this library
-LATEST_VERSION_NUMBER=$(git rev-parse --short main)
+DUMMY_VERSION_NUMBER='1.0.0-SNAPSHOT'
 VERSION_REMOVE_SED="/<\/description>/{
 n
-s/^\([[:space:]]*<version>\).*\(<\/version>\)$/\1${LATEST_VERSION_NUMBER}\2/
+s/^\([[:space:]]*<version>\).*\(<\/version>\)$/\1${DUMMY_VERSION_NUMBER}\2/
 }"
 
 # Find the files and read each file path into the 'file_path' variable.
