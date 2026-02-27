@@ -5,7 +5,7 @@ SEARCH_DIR="."
 # sbt-kalix-1.4.1-54-5206e862-dev.pom
 # kalix-codegen-java_2.12-1.4.1-54-5206e862-dev.pom
 # kalix-common-libraries_2.13-1.23.0+4-4b87ba57+20251128-1549.pom
-VERSION_REGEX='(_2\.1[23]+)?-[0-9]+\.[0-9]+\.[0-9]+[^.]*\.pom$'
+VERSION_REGEX='(_2\.1[23]+)?-([0-9]+\.[0-9]+\.[0-9]+[^.]*)?([a-f0-9.]+)?\.pom$'
 
 set -euo pipefail
 
