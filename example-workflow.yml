@@ -1,0 +1,12 @@
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup Global Akka Resolver
+      uses: ./
+      with:
+        sbt-plugin-project-name: 'my-sbt-plugin'
+        maven-mirror-control: 'NO_MIRROR'
