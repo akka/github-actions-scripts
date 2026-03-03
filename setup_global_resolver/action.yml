@@ -12,5 +12,5 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - run: ${{ github.action_path }}/setup_global_resolver.sh "${{ inputs.sbt-plugin-project-name }}" "${{ inputs.maven-mirror-control }}"
+    - run: ${{ github.action_path }}/../setup_global_resolver.sh "${{ inputs.sbt-plugin-project-name }}" "${{ inputs.maven-mirror-control }}"
       shell: bash
