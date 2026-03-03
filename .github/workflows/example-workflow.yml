@@ -6,7 +6,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Setup Global Akka Resolver
-      uses: ./
+      uses: ./setup_global_resolver
       with:
         sbt-plugin-project-name: 'my-sbt-plugin'
         maven-mirror-control: 'NO_MIRROR'
