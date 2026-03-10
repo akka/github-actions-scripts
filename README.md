@@ -18,7 +18,7 @@ The script accepts two positional arguments. It includes logic to handle cases w
 | Parameter | Position | Required | Description |
 | :--- | :--- | :--- | :--- |
 | **SBT Project Name** | `$1` | No | The name of the sbt plugin project directory. Used to locate `src/sbt-test` for scripted test setup. |
-| **Mirror Control** | `$2` | No | Set to `NO_MIRROR` to prevent the script from injecting `<mirrors>` into the Maven `settings.xml`. |
+| **Mirror Control** | `$2` | No | Set to `NO_MIRROR` to prevent the script from injecting `<mirrors>` into the Maven `settings.xml`. **Required for projects using `protoc`**, which brute forces its own resolver and fails to handle mirrored edge cases. |
 
 #### Argument Logic
 * **If 2 arguments are provided:** `$1` is the project name, `$2` is the mirror control.
