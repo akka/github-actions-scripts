@@ -1,0 +1,9 @@
+name: 'Verify checked in pom.xml files'
+description: 'Organizes sbt-generated pom.xml files for analysis tools and verifies no uncommitted changes.'
+runs:
+  using: 'composite'
+  steps:
+    - run: ${{ github.action_path }}/../pom-organize.sh
+      shell: bash
+    - run: ${{ github.action_path }}/../pom-no-diff.sh
+      shell: bash
