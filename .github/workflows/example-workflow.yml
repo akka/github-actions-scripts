@@ -4,39 +4,41 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Setup Global Akka Resolver
-      uses: akka/github-actions-scripts/setup_global_resolver@main
-      with:
-        sbt-plugin-project-name: 'my-sbt-plugin'
-        maven-mirror-control: 'NO_MIRROR'
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Global Akka Resolver
+        uses: akka/github-actions-scripts/setup_global_resolver@main
+        with:
+          sbt-plugin-project-name: "my-sbt-plugin"
+          maven-mirror-control: "NO_MIRROR"
 
   test-pom-organize:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Create test pom fixture
-      run: |
-        mkdir -p target
-        cat > target/my-artifact-1.2.3.pom << 'EOF'
-        <project>
-          <description>test artifact</description>
-          <version>1.2.3</version>
-          <repositories>
-            <repository>
-              <id>test-repo</id>
-              <url>https://example.com</url>
-            </repository>
-          </repositories>
-        </project>
-        EOF
-    - name: Run pom-organize.sh on test fixtures
-      run: bash pom-organize.sh
-    - name: Commit organized poms
-      run: |
-        git config user.email "ci@github.com"
-        git config user.name "CI"
-        git add generated-poms
-        git commit -m "test: add organized poms"
-    - name: Test pom_organize action (re-run should produce no diff)
-      uses: ./verify_pom
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Create test pom fixture
+        run: |
+          mkdir -p target
+          cat > target/my-artifact-1.2.3.pom << 'EOF'
+          <project>
+            <description>test artifact</description>
+            <version>1.2.3</version>
+            <repositories>
+              <repository>
+                <id>test-repo</id>
+                <url>https://example.com</url>
+              </repository>
+            </repositories>
+          </project>
+          EOF
+      - name: Run pom-organize.sh on test fixtures
+        run: bash pom-organize.sh
+      - name: Commit organized poms
+        run: |
+          git config user.email "ci@github.com"
+          git config user.name "CI"
+          git add generated-poms
+          git commit -m "test: add organized poms"
+      - name: Test pom_organize action (re-run should produce no diff)
+        uses: ./verify_pom
