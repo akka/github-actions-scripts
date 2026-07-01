@@ -1,0 +1,7 @@
+name: "Validate unchanged Artifact BOM pom.xml files"
+description: "Fails if any files artifact-bom changed."
+runs:
+  using: "composite"
+  steps:
+    - run: ${{ github.action_path }}/../artifact-bom-no-diff.sh
+      shell: bash
