@@ -8,7 +8,7 @@ set -euo pipefail
 
 # --- Configuration ---
 AKKA_RESOLVER_URL='https://repo.akka.io/maven/github_actions'
-AKKA_SNAPSHOT_RESOLVER_URL='https://repo.akka.io/maven/snapshots/github_actions'
+AKKA_SNAPSHOT_RESOLVER_URL='https://repo.akka.io/snapshots/github_actions'
 SBT_RESOLVER_LINE="resolvers += \"Akka library repository\" at \"$AKKA_RESOLVER_URL\"
 resolvers += \"Akka snapshot repository\" at \"$AKKA_SNAPSHOT_RESOLVER_URL\""
 
